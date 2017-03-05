@@ -15,7 +15,7 @@ SSL verification must be turned off because the server uses self-signed certific
 ## Notes
 
 - There are a few configuration variables you can customize
-- Uses a modified version of the reference lfs test server implementation from Github, which is somewhat old and not validated for production. My version is forked at [https://github.com/TheJare/lfs-test-server]()
+- Uses a modified version of the reference lfs test server implementation from Github, which is somewhat old and not validated for production. My version is forked at [https://github.com/TheJare/lfs-test-server](https://github.com/TheJare/lfs-test-server)
 - This lfs server does not support locking or any fancy git lfs 2.0 features.
 - Creating new users and repos must be done manually inside the VM. Remember to add new users to both the web server auth file (typically at `var/gitlfs/htpasswd`) and to the lfs server
 - The lfs server runs under the www-data user. Not very pretty.
