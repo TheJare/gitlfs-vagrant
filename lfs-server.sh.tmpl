@@ -1,0 +1,16 @@
+#!/bin/bash
+# Modified version of https://github.com/git-lfs/lfs-test-server
+
+set -eu
+set -o pipefail
+
+LFS_LISTEN="tcp://:9999"
+LFS_HOST="https://localhost:8443/lfs"
+LFS_CONTENTPATH="/var/gitlfs/lfs"
+LFS_METADB="/var/gitlfs/lfs.db"
+LFS_ADMINUSER="GITLFS_ADMIN_USER"
+LFS_ADMINPASS="GITLFS_ADMIN_PASSWORD"
+
+export LFS_LISTEN LFS_HOST LFS_CONTENTPATH LFS_METADB LFS_ADMINUSER LFS_ADMINPASS
+
+"GITLFS_ROOT/lfs-test-server"
