@@ -14,7 +14,7 @@ Vagrant.require_version ">= 1.5.0"
 
 Vagrant.configure("2") do |config|
 
-  config.vm.define :gitlab do |config|
+  config.vm.define :gitlfs do |config|
     # Configure some hostname here
     config.vm.hostname = host
     config.vm.box = "ubuntu/xenial64"

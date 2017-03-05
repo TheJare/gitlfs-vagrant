@@ -50,8 +50,6 @@ apt-get -y install openssl
 # Tools to serve git via https via fcgi
 apt-get -y install nginx git git-core fcgiwrap
 
-wget https://github.com/TheJare/lfs-test-server/releases/download/v0.5.0-TheJare/lfs-test-server -O "$GITLFS_ROOT/lfs-test-server"
-
 # generate ssl keys
 apt-get -y install ca-certificates ssl-cert
 make-ssl-cert generate-default-snakeoil --force-overwrite
@@ -61,13 +59,13 @@ echo "Setting up git repo folder inside $GITLFS_ROOT/git"
 mkdir $GITLFS_ROOT
 mkdir $GITLFS_ROOT/git
 mkdir $GITLFS_ROOT/lfs
-DEFAULT_AUTH_PW=$(openssl passwd -crypt GITLFS_ADMIN_PASSWORD)
+DEFAULT_AUTH_PW=$(openssl passwd -crypt $GITLFS_ADMIN_PASSWORD)
 DEFAULT_AUTH="$GITLFS_ADMIN_USER:$DEFAULT_AUTH_PW"
 printf "$DEFAULT_AUTH\n" >> $GITLFS_ROOT/htpasswd
-chown -R www-data:www-data $GITLFS_ROOT
 
-# Create the defaykt user in the lfs server
-curl -v -d name=$GITLFS_ADMIN_USER -d password=GITLFS_ADMIN_PASSWORD -u "$DEFAULT_AUTH" http://localhost:9999/mgmt/add
+wget https://github.com/TheJare/lfs-test-server/releases/download/v0.5.0-TheJare/lfs-test-server -nv -O "$GITLFS_ROOT/lfs-test-server" 2>&1
+
+chown -R www-data:www-data $GITLFS_ROOT
 
 # Create a simple test repo
 sudo -u www-data git init --bare "$GITLFS_ROOT/git/$GITLFS_ADMIN_USER/test.git"
@@ -76,17 +74,20 @@ sudo -u www-data git init --bare "$GITLFS_ROOT/git/$GITLFS_ADMIN_USER/test.git"
 sed -e "s,/var/gitlfs,${GITLFS_ROOT}," "$LOCALDIR/gitlfs.nginx" > /etc/nginx/sites-enabled/gitlfs
 
 # Set up the lfs server and daemon service
-sed -e "s,GITLFS_ADMIN_USER,${GITLFS_ADMIN_USER}," -e "s,GITLFS_ADMIN_PASSWORD,${DEFAULT_AUTH_PW}," -e "s,GITLFS_ROOT,$GITLFS_ROOT," "$LOCALDIR/lfs_server.sh.tmpl" > /usr/sbin/lfs_server.sh
+sed -e "s,GITLFS_ADMIN_USER,${GITLFS_ADMIN_USER}," -e "s,GITLFS_ADMIN_PASSWORD,${DEFAULT_AUTH_PW}," -e "s,GITLFS_ROOT,$GITLFS_ROOT," "$LOCALDIR/lfs-server.sh.tmpl" > /usr/sbin/lfs-server.sh
 
-chmod +x /usr/sbin/lfs_server.sh
+chmod +x /usr/sbin/lfs-server.sh
 chmod +x "$GITLFS_ROOT/lfs-test-server"
 
 cp "$LOCALDIR/lfs_server.service" /lib/systemd/system/
 systemctl enable lfs_server.service
-systemctl daemon-reload # not needed?
+# systemctl daemon-reload # not needed?
 systemctl start lfs_server
 
 service nginx reload
+
+# Create the default user in the lfs server
+curl -s -S -d name=$GITLFS_ADMIN_USER -d password=$GITLFS_ADMIN_PASSWORD -u "$DEFAULT_AUTH" http://localhost:9999/mgmt/add
 
 # done
 echo ""
