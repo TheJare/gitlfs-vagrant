@@ -80,8 +80,7 @@ chmod +x /usr/sbin/lfs-server.sh
 chmod +x "$GITLFS_ROOT/lfs-test-server"
 
 cp "$LOCALDIR/lfs_server.service" /lib/systemd/system/
-systemctl enable lfs_server.service
-# systemctl daemon-reload # not needed?
+systemctl enable lfs_server.service 2>&1
 systemctl start lfs_server
 
 service nginx reload
@@ -97,4 +96,11 @@ echo "Default git user is '$GITLFS_ADMIN_USER' with password '$GITLFS_ADMIN_PASS
 echo "Inside this VM the url will be https://localhost/git/<<user>>/<<repo>>"
 echo "From the VM host the url will be https://localhost:$GITLFS_PORT/git/<<user>>/<<repo>>"
 echo ""
-echo "To begin, try: git -c http.sslVerify=false clone https://localhost:$GITLFS_PORT/git/$GITLFS_ADMIN_USER/test.git"
+echo "To begin, try:"
+echo "  git -c http.sslVerify=false clone https://localhost:$GITLFS_PORT/git/$GITLFS_ADMIN_USER/test.git"
+echo "  cd test"
+echo "  git lfs track '*.zip'"
+echo "  echo test > test.zip"
+echo "  git add ."
+echo "  git commit -m 'first commit'"
+echo "  git -c http.sslVerify=false push origin master"
