@@ -63,7 +63,7 @@ DEFAULT_AUTH_PW=$(openssl passwd -crypt $GITLFS_ADMIN_PASSWORD)
 DEFAULT_AUTH="$GITLFS_ADMIN_USER:$DEFAULT_AUTH_PW"
 printf "$DEFAULT_AUTH\n" >> $GITLFS_ROOT/htpasswd
 
-wget https://github.com/TheJare/lfs-test-server/releases/download/v0.5.0-TheJare/lfs-test-server -nv -O "$GITLFS_ROOT/lfs-test-server" 2>&1
+wget https://github.com/TheJare/lfs-test-server/releases/download/v0.5.0-rc1/lfs-test-server -nv -O "$GITLFS_ROOT/lfs-test-server" 2>&1
 
 chown -R www-data:www-data $GITLFS_ROOT
 
