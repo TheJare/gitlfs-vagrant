@@ -71,7 +71,7 @@ chown -R www-data:www-data $GITLFS_ROOT
 sudo -u www-data git init --bare "$GITLFS_ROOT/git/$GITLFS_ADMIN_USER/test.git"
 
 # Set up the web server to accept and forward git requests
-sed -e "s,/var/gitlfs,${GITLFS_ROOT}," "$LOCALDIR/gitlfs.nginx" > /etc/nginx/sites-enabled/gitlfs
+sed -e "s,/var/gitlfs,${GITLFS_ROOT}," -e "s,8443,${GITLFS_PORT}," "$LOCALDIR/gitlfs.nginx" > /etc/nginx/sites-enabled/gitlfs
 
 # Set up the lfs server and daemon service
 sed -e "s,GITLFS_ADMIN_USER,${GITLFS_ADMIN_USER}," -e "s,GITLFS_ADMIN_PASSWORD,${DEFAULT_AUTH_PW}," -e "s,GITLFS_ROOT,$GITLFS_ROOT," "$LOCALDIR/lfs-server.sh.tmpl" > /usr/sbin/lfs-server.sh
