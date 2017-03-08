@@ -18,7 +18,7 @@ The default user is called "admin" with password "admin". That's also the root u
 
 - There are a few configuration variables you can customize in the Vagrantfile.
 - Uses a modified version of the reference lfs test server implementation from Github, which is somewhat old and not validated for production. My version is forked at [https://github.com/TheJare/lfs-test-server](https://github.com/TheJare/lfs-test-server)
-- This lfs server does not support locking or any fancy git lfs 2.0 features.
+- Authentication in the lfs server and separation of data & locks per repo is not fully implemented. For now just use this with one repo and the default 'admin' user.
 - Creating new users and repos must be done manually inside the VM. Remember to add new users to both the web server auth file (typically at `var/gitlfs/htpasswd`) and to the lfs server. The `install.sh` script is the best place to see how this is done until I document this better.
 - The lfs server runs under the www-data user. Not very pretty.
 - This is not yet very tested.
